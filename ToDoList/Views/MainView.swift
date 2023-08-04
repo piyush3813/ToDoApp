@@ -8,16 +8,33 @@
 import SwiftUI
 
 struct MainView: View {
+    @StateObject var viewModel = MainViewViewModel()
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+        if viewModel.isSignedIn, !viewModel.currentUserID.isEmpty{
+          accountView
         }
-        .padding()
+        else {
+            LoginView()
+        }
+        
+    }
+    
+    @ViewBuilder
+    var accountView: some View{
+        TabView{
+            ToDoListView(userId: viewModel.currentUserID)
+                .tabItem {
+                    Label("Home",  systemImage:"house")
+                }
+            
+            ProfileView()
+                .tabItem {
+                    Label("Profile",systemImage: "person")
+                }
+        }
     }
 }
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
